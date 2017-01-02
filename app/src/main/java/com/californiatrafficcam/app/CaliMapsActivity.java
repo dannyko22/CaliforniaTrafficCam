@@ -319,6 +319,7 @@ public class CaliMapsActivity extends FragmentActivity implements GoogleMap.OnIn
             Marker marker = mMap.addMarker(markerOptions);
             markers.put(marker.getId(), count-1);
             count--;
+
         }
     }
 
