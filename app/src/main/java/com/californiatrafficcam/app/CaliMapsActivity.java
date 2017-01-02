@@ -2,6 +2,7 @@ package com.californiatrafficcam.app;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,8 +30,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -62,7 +65,7 @@ public class CaliMapsActivity extends FragmentActivity implements GoogleMap.OnIn
     private UiSettings mapUISetting;
     Hashtable<String, Integer> markers;
     public ImageView urlImageView;
-
+    private InterstitialAd interstitial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +121,7 @@ public class CaliMapsActivity extends FragmentActivity implements GoogleMap.OnIn
             }
         });
 
-        initializeAdNetwork();
+        //initializeAdNetwork();
 
     }
 
@@ -149,6 +152,20 @@ public class CaliMapsActivity extends FragmentActivity implements GoogleMap.OnIn
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        // Prepare the Interstitial Ad
+        interstitial = new InterstitialAd(this);
+// Insert the Ad Unit ID
+        interstitial.setAdUnitId(getString(R.string.admob_interstitial_id));
+
+        interstitial.loadAd(adRequest);
+// Prepare an Interstitial Ad Listener
+        interstitial.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                // Call displayInterstitial() function
+                displayInterstitial();
+            }
+        });
     }
 
 
@@ -174,6 +191,17 @@ public class CaliMapsActivity extends FragmentActivity implements GoogleMap.OnIn
 
         if (id == R.id.action_settings) {
             aboutMenuItem();
+        } else if (id==R.id.rateme)
+        {
+            try {
+                Uri uri = Uri.parse("market://details?id=com.californiatrafficcam.app");
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                this.startActivity(goToMarket);
+            } catch (ActivityNotFoundException e) {
+                this.startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=com.californiatrafficcam.app"
+                        )));
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -265,7 +293,7 @@ public class CaliMapsActivity extends FragmentActivity implements GoogleMap.OnIn
         {
             cameraPosition = new CameraPosition.Builder()
                     .target(locationLatLngSetup) // Sets the center of the map
-                    .zoom(6)                   // Sets the zoom
+                    .zoom(8)                   // Sets the zoom
                     .bearing(0) // Sets the orientation of the camera to north
                     .tilt(0)    // Sets the tilt of the camera to 0 degrees
                     .build();    // Creates a CameraPosition from the builder
@@ -273,7 +301,7 @@ public class CaliMapsActivity extends FragmentActivity implements GoogleMap.OnIn
         else {
             cameraPosition = new CameraPosition.Builder()
                     .target(locationLatLngSetup) // Sets the center of the map
-                    .zoom(8)                   // Sets the zoom
+                    .zoom(11)                   // Sets the zoom
                     .bearing(0) // Sets the orientation of the camera to north
                     .tilt(0)    // Sets the tilt of the camera to 0 degrees
                     .build();    // Creates a CameraPosition from the builder
@@ -395,5 +423,13 @@ public class CaliMapsActivity extends FragmentActivity implements GoogleMap.OnIn
             }
         }
     }
+
+    public void displayInterstitial() {
+        // If Ads are loaded, show Interstitial else show nothing.
+        if (interstitial.isLoaded()) {
+            interstitial.show();
+        }
+    }
+
 
 }

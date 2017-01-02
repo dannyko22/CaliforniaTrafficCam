@@ -6,5 +6,5 @@
     <string name="action_settings">About Me</string>
     <string name="title_activity_about_me">California Traffic Map</string>
     <string name="banner_ad_unit_id">ca-app-pub-6778581968244410/7329727285</string>
-
+    <string name="admob_interstitial_id">ca-app-pub-6778581968244410/7369089688</string>
 </resources>
