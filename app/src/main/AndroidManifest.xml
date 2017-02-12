@@ -36,7 +36,8 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent"></activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashScreenActivity"
+            android:theme="@style/SplashTheme"
             android:label="@string/title_activity_cali_maps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,6 +57,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCXqCj-gUC6JZxZep_XP7SYCsTHb1mS1dU" />
 
+        <activity android:name=".MainActivity"></activity>
         <activity android:name=".CaliMapsActivity"></activity>
     </application>
 
